@@ -13,21 +13,21 @@ const io = new Server(server, { cors: { origin: '*', credentials: true } });
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
+    // Handle room joining logic
     socket.on('join-room', ({ roomId, role }) => {
+        // If room doesn't exist, create it
+        if (!rooms[roomId]) {
+            rooms[roomId] = { interviewer: null, interviewee: null };
+        }
+
+        // Remove user from any existing room before joining a new one
         Object.keys(rooms).forEach(existingRoom => {
             if (rooms[existingRoom].interviewer === socket.id || rooms[existingRoom].interviewee === socket.id) {
-                // Remove user from existing room
                 if (rooms[existingRoom].interviewer === socket.id) rooms[existingRoom].interviewer = null;
                 if (rooms[existingRoom].interviewee === socket.id) rooms[existingRoom].interviewee = null;
                 socket.leave(existingRoom);
             }
         });
-        
-        if (!rooms[roomId]) {
-            rooms[roomId] = { interviewer: null, interviewee: null };
-        }
-        // console.log("Data received in backend:", { roomId, role });
-        // console.log(rooms[roomId]);
 
         if (role === 'Interviewer') {
             if (rooms[roomId].interviewer) {
@@ -36,6 +36,7 @@ io.on('connection', (socket) => {
             }
             rooms[roomId].interviewer = socket.id;
         } else if (role === 'Interviewee') {
+            // ✅ Fix: Now the interviewer check happens after ensuring the room exists
             if (!rooms[roomId].interviewer) {
                 socket.emit("room-error", "Interviewer is not present, wait!");
                 return;
@@ -47,14 +48,35 @@ io.on('connection', (socket) => {
             rooms[roomId].interviewee = socket.id;
         }
 
+        socket.data.roomId = roomId; // Store roomId in socket data
         socket.join(roomId);
-        // console.log(`${role} joined room ${roomId}`);
-
-        // Notify the user that they successfully joined
         socket.emit("room-joined", { roomId });
-
+        console.log(`${role} joined room ${roomId}`);
     });
 
+    // Handle real-time code updates
+    socket.on('update-code', ({ newCode, roomId }) => {
+        io.to(roomId).emit('send-code', newCode);
+    });
+
+    // Handle language selection updates
+    socket.on("update-language", ({ language, roomId }) => {
+        io.to(roomId).emit("send-language", language);
+    });
+
+    // Handle messaging in the interview room
+    socket.on("send-message", ({ message, roomId, senderUserName }) => {
+        const fullMessage = { text: message.text, sender: socket.id, senderUserName };
+        io.to(roomId).emit("receive-message", fullMessage);
+    });
+
+    // Handle interviewer sending a question with test cases
+    socket.on("send-question", ({ question, testCases, roomId }) => {
+        console.log(`Question sent in room ${roomId}:`, question);
+        io.to(roomId).emit("receive-question", { question, testCases });
+    });
+
+    // Handle disconnection
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
         for (const room in rooms) {
@@ -64,6 +86,7 @@ io.on('connection', (socket) => {
     });
 });
 
+// Start server
 server.listen(SOCKET_PORT, () => {
     console.log(`Socket Server -> http://localhost:${SOCKET_PORT}`);
 });

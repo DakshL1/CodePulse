@@ -30,12 +30,14 @@ const InterviewMode = () => {
 
   const handleSubmit = (e) => {
      e.preventDefault();
+    console.log("button clicked");
     if (!roomId || !role) {
         alert("Please enter a Room ID and select a Role.");
         return;
     }
     
     setRoleContext(role);
+    console.log(role);
 
     setTimeout(() => {
       socket.emit("join-room", { roomId, role });
