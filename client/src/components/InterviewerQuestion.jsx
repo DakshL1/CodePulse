@@ -1,10 +1,10 @@
 import { useState } from "react";
 import socket from "../components/sockets"; // Importing socket instance
 
-const InterviewerQuestion = ({ roomId }) => {
+const InterviewerQuestion = ({ roomId,testCases,setTestCases }) => {
   const [question, setQuestion] = useState("");
-  const [testCases, setTestCases] = useState([{ input: "", expectedOutput: "" }]);
-  const [previousQ, setPreviousQ] = useState([{Question:"",Input:"",ExpectedOutput:""}]);
+  
+ 
   
   // Update test case values
   const updateTestCase = (index, field, value) => {
@@ -15,7 +15,7 @@ const InterviewerQuestion = ({ roomId }) => {
 
   // Add a new test case
   const addTestCase = () => {
-    setTestCases([...testCases, { input: "", expectedOutput: "" }]);
+    setTestCases([...testCases, { input: "", expectedOutput: "", output: "", status: "Not Executed", testCasePassed: null }]);
   };
 
   // Remove a test case
@@ -29,11 +29,25 @@ const InterviewerQuestion = ({ roomId }) => {
 
   // Send question to interviewee
   const sendQuestion = () => {
-    if (question.trim() && testCases.length > 0) {
-      socket.emit("send-question", { question, testCases, roomId });
+    if (question.trim()) {
+      // Reset test cases before sending a new question
+      const resetTestCases = testCases.map(tc => ({
+        input: tc.input,
+        expectedOutput: tc.expectedOutput,
+        output: "",
+        status: "Not Executed",
+        testCasePassed: null
+      }));
+  
+      setTestCases(resetTestCases); // Update state
+  
+      // Emit event with reset test cases
+      socket.emit("send-question", { question, testCases: resetTestCases, roomId });
+  
       alert("Question sent to the interviewee!");
     }
   };
+  
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md w-full">

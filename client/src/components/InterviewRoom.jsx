@@ -10,6 +10,7 @@ import { java } from '@codemirror/lang-java';
 import { useAuth0 } from '@auth0/auth0-react';
 import InterviewerQuestion from "./InterviewerQuestion";
 import IntervieweeQuestion from "./IntervieweeQuestion";
+import CodeExecutionArea from "./CodeExecutionArea"; // Import the new component
 
 const InterviewRoom = () => {
   const { role } = useRole();
@@ -21,6 +22,8 @@ const InterviewRoom = () => {
   const [newMessage, setNewMessage] = useState("");
   const [isChatOpen, setIsChatOpen] = useState(false);
   const { user } = useAuth0();
+
+  const [testCases, setTestCases] = useState([{ input: "", expectedOutput: "", output: "", status: "Not Executed", testCasePassed: null }]);
 
   useEffect(() => {
     if (socket.connected) {
@@ -63,7 +66,7 @@ const InterviewRoom = () => {
         setNewMessage("");
       }
     },
-    [newMessage, roomId]
+    [newMessage, roomId, user]
   );
 
   const updateCode = useCallback(
@@ -94,29 +97,32 @@ const InterviewRoom = () => {
 
   return (
     <div className="h-screen flex flex-col bg-gray-100">
-      
-
       <div className="flex flex-1 p-4 gap-4">
         <div className="flex flex-col gap-4 w-1/3">
           <div className="bg-white p-4 shadow-md rounded-lg h-1/3 flex items-center justify-center">
             Video Chat (Coming Soon...)
           </div>
-          <div className="bg-white p-4 shadow-md rounded-lg flex-1 flex items-center justify-center">
+          <div className="bg-white p-4 shadow-md rounded-lg flex-1">
             {role === "Interviewer" ? (
-              
-              <InterviewerQuestion roomId={roomId} />
+              <InterviewerQuestion 
+                roomId={roomId} 
+                testCases={testCases} 
+                setTestCases={setTestCases} 
+              />
             ) : (
-              <IntervieweeQuestion />
+              <IntervieweeQuestion 
+                testCases={testCases} 
+                setTestCases={setTestCases}
+              />
             )}
           </div>
-
         </div>
 
         <div className="flex flex-col w-2/3 gap-4">
           <div className="bg-white p-4 shadow-md rounded-lg flex-1 flex flex-col h-full">
             <div className="flex justify-between items-center">
-            <p className="font-semibold mb-2">Code Editor</p>
-            <p className=" font-bold   mb-2"> Interview Room - {roomId}</p>
+              <p className="font-semibold mb-2">Code Editor</p>
+              <p className="font-bold mb-2">Interview Room - {roomId}</p>
             </div>
             
             {/* Language Selector */}
@@ -148,30 +154,48 @@ const InterviewRoom = () => {
           </div>
 
           <div className="flex gap-4">
-            <div className="bg-white p-4 shadow-md rounded-lg flex-1 flex items-center justify-center">
-              Code Execution Area (Test Cases & Output)
-              <button className="bg-blue-500 text-white p-2 rounded-md shadow-md" onClick={() => setIsChatOpen(!isChatOpen)}>
-                Chat
-              </button>
-              {isChatOpen && (
-                <div className="absolute bottom-10 right-0 w-64 bg-white shadow-lg rounded-md p-4">
-                  <h2 className="font-bold">Chat</h2>
-                  <div className="h-32 overflow-y-auto border p-2 mb-2">
-                    {messages.map((msg, index) => (
-                      <div key={index} className={`text-sm p-1 ${msg.sender === socket.id ? 'text-right' : 'text-left'}`}>
-                        <span className="font-bold text-black">{msg.senderUserName || "Unknown User"}</span>
-                        <br />
-                        {msg.text}
-                      </div>
-                    ))}
-                  </div>
-                  <form onSubmit={sendMessage} className="flex">
-                    <input type="text" placeholder="Type a message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} className="w-full p-2 border rounded" />
-                    <button type="submit" className="bg-blue-500 text-white p-2 ml-2 rounded">Send</button>
-                  </form>
+            {/* Replace placeholder with actual CodeExecutionArea component */}
+            <CodeExecutionArea 
+              testCases={testCases} 
+              code={code} 
+              language={language} 
+              roomId={roomId}
+              setTestCases={setTestCases}
+            />
+            
+            {/* Chat button */}
+            <button 
+              className="bg-blue-500 text-white p-2 rounded-md shadow-md h-10 self-start"
+              onClick={() => setIsChatOpen(!isChatOpen)}
+            >
+              Chat
+            </button>
+            
+            {/* Chat popup */}
+            {isChatOpen && (
+              <div className="absolute bottom-10 right-0 w-64 bg-white shadow-lg rounded-md p-4">
+                <h2 className="font-bold">Chat</h2>
+                <div className="h-32 overflow-y-auto border p-2 mb-2">
+                  {messages.map((msg, index) => (
+                    <div key={index} className={`text-sm p-1 ${msg.sender === socket.id ? 'text-right' : 'text-left'}`}>
+                      <span className="font-bold text-black">{msg.senderUserName || "Unknown User"}</span>
+                      <br />
+                      {msg.text}
+                    </div>
+                  ))}
                 </div>
-              )}
-            </div>
+                <form onSubmit={sendMessage} className="flex">
+                  <input 
+                    type="text" 
+                    placeholder="Type a message..." 
+                    value={newMessage} 
+                    onChange={(e) => setNewMessage(e.target.value)} 
+                    className="w-full p-2 border rounded" 
+                  />
+                  <button type="submit" className="bg-blue-500 text-white p-2 ml-2 rounded">Send</button>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -76,6 +76,11 @@ io.on('connection', (socket) => {
         io.to(roomId).emit("receive-question", { question, testCases });
     });
 
+    socket.on("send-output",({testCases,roomId})=>{
+        console.log(`Updating output in ${roomId}`);
+        io.to(roomId).emit("update-output",testCases);
+    });
+
     // Handle disconnection
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
