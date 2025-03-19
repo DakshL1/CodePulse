@@ -163,22 +163,22 @@ const InterviewRoom = () => {
               setTestCases={setTestCases}
             />
             
-            {/* Chat button */}
+          {/* Chat button (always at the bottom-right) */}
             <button 
-              className="bg-blue-500 text-white p-2 rounded-md shadow-md h-10 self-start"
+              className="fixed bottom-4 right-4 bg-blue-500 text-white p-2 rounded-md shadow-md h-10"
               onClick={() => setIsChatOpen(!isChatOpen)}
             >
               Chat
             </button>
-            
-            {/* Chat popup */}
+
+            {/* Chat popup (appears above the button) */}
             {isChatOpen && (
-              <div className="absolute bottom-10 right-0 w-64 bg-white shadow-lg rounded-md p-4">
+              <div className="fixed bottom-16 right-4 w-64 bg-white shadow-lg rounded-md p-4">
                 <h2 className="font-bold">Chat</h2>
                 <div className="h-32 overflow-y-auto border p-2 mb-2">
                   {messages.map((msg, index) => (
                     <div key={index} className={`text-sm p-1 ${msg.sender === socket.id ? 'text-right' : 'text-left'}`}>
-                      <span className="font-bold text-black">{msg.senderUserName || "Unknown User"}</span>
+                      <span className="font-bold text-black">{msg.senderUserName || "Unknown"}</span>
                       <br />
                       {msg.text}
                     </div>
@@ -196,6 +196,7 @@ const InterviewRoom = () => {
                 </form>
               </div>
             )}
+
           </div>
         </div>
       </div>

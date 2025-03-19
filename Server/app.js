@@ -76,6 +76,14 @@ io.on('connection', (socket) => {
         io.to(roomId).emit("receive-question", { question, testCases });
     });
 
+    socket.on("delete-question", ({roomId }) => {
+        console.log(`request for deleting Q sent in room ${roomId}`);
+        io.to(roomId).emit("receive-delete-question");
+    });
+
+
+    
+
     socket.on("send-output",({testCases,roomId})=>{
         console.log(`Updating output in ${roomId}`);
         io.to(roomId).emit("update-output",testCases);

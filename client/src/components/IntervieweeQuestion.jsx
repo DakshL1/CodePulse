@@ -11,6 +11,12 @@ const IntervieweeQuestion = ({ testCases, setTestCases }) => {
       setTestCases(testCases);
     });
 
+    socket.on("receive-delete-question" , () => {
+      setReceivedQuestion("");
+      setTestCases([{ input: "", expectedOutput: "", output: "", status: "Not Executed", testCasePassed: null }]); // Clear test cases
+
+    });
+
     return () => {
       socket.off("receive-question"); // Cleanup listener
     };

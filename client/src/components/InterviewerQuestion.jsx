@@ -48,6 +48,16 @@ const InterviewerQuestion = ({ roomId,testCases,setTestCases }) => {
     }
   };
   
+  const deleteQuestion = () => {
+    setQuestion(""); // Clear question
+    setTestCases([{ input: "", expectedOutput: "", output: "", status: "Not Executed", testCasePassed: null }]); // Clear test cases
+
+    // Notify interviewee
+    socket.emit("delete-question", { roomId });
+
+    
+  };
+
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md w-full">
@@ -88,6 +98,9 @@ const InterviewerQuestion = ({ roomId,testCases,setTestCases }) => {
       </button>
       <button onClick={sendQuestion} className="bg-blue-500 text-white p-2 mt-2 rounded ml-2">
         Send Question
+      </button>
+      <button onClick={deleteQuestion} className="bg-red-600 text-white p-2 mt-2 rounded ml-2">
+        Delete Question
       </button>
     </div>
   );
