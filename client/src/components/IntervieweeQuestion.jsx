@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import socket from "../components/sockets"; // Import the socket instance
+import socket from "../api/sockets"; // Import the socket instance
 
 const IntervieweeQuestion = ({ testCases, setTestCases }) => {
   const [receivedQuestion, setReceivedQuestion] = useState(null);

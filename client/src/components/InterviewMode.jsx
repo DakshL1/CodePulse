@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import socket from './sockets';
+import socket from '../api/sockets';
 import { useRole } from '../context/RoleContext';
 
 const InterviewMode = () => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import createBulkSubmission from './judgeZeroApi';
-import socket from './sockets';
+import createBulkSubmission from '../api/judgeZeroApi';
+import socket from '../api/sockets';
 
 const CodeExecutionArea = ({ roomId, testCases, code, language, setTestCases }) => {
   const [isExecuting, setIsExecuting] = useState(false);

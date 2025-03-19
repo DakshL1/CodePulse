@@ -1,5 +1,5 @@
 import { useState } from "react";
-import socket from "../components/sockets"; // Importing socket instance
+import socket from "../api/sockets"; // Importing socket instance
 
 const InterviewerQuestion = ({ roomId,testCases,setTestCases }) => {
   const [question, setQuestion] = useState("");
