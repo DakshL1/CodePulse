@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import socket from "..api/sockets"; // Import the persistent socket
+import socket from "../api/sockets"; // Import the persistent socket
 import { useRole } from "../context/RoleContext";
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript'; 
