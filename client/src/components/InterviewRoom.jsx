@@ -11,6 +11,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import InterviewerQuestion from "./InterviewerQuestion";
 import IntervieweeQuestion from "./IntervieweeQuestion";
 import CodeExecutionArea from "./CodeExecutionArea"; // Import the new component
+import VideoCall from "./VideoCall";
 
 const InterviewRoom = () => {
   const { role } = useRole();
@@ -27,7 +28,7 @@ const InterviewRoom = () => {
 
   useEffect(() => {
     if (socket.connected) {
-      socket.emit("join-room", { role, roomId });
+      // socket.emit("join-room", { role, roomId });
     } else {
       socket.once("connect", () => {
         socket.emit("join-room", { role, roomId });
@@ -99,9 +100,11 @@ const InterviewRoom = () => {
     <div className="h-screen flex flex-col bg-gray-100">
       <div className="flex flex-1 p-4 gap-4">
         <div className="flex flex-col gap-4 w-1/3">
-          <div className="bg-white p-4 shadow-md rounded-lg h-1/3 flex items-center justify-center">
-            Video Chat (Coming Soon...)
-          </div>
+
+          <VideoCall 
+          roomId= {roomId}
+          />
+
           <div className="bg-white p-4 shadow-md rounded-lg flex-1">
             {role === "Interviewer" ? (
               <InterviewerQuestion 

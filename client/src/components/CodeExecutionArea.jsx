@@ -7,6 +7,7 @@ const CodeExecutionArea = ({ roomId, testCases, code, language, setTestCases }) 
   const [selectedTestCase, setSelectedTestCase] = useState(0);
   const [id, setId] = useState(0);
 
+  
   useEffect(() => {
     let newId;
     switch (language) {
@@ -87,69 +88,81 @@ const CodeExecutionArea = ({ roomId, testCases, code, language, setTestCases }) 
         {isExecuting ? "Running..." : "Run Test"}
       </button>
     </div>
-  
+        
     <div className="flex gap-4 h-full">
-      {/* Test Case List */}
-      <div className="w-1/3 border rounded-lg p-2 overflow-y-auto">
-        <h3 className="text-sm font-medium mb-2">Test Case List</h3>
-        {testCases.length > 0 ? (
-          <div className="space-y-2">
-            {testCases.map((testCase, index) => (
-              <div
-                key={index}
-                className={`p-2 rounded cursor-pointer ${
-                  selectedTestCase === index ? "bg-blue-100 border border-blue-300" : "bg-gray-50 hover:bg-gray-100"
-                }`}
-                onClick={() => setSelectedTestCase(index)}
-              >
-                <p className="text-xs font-medium">Test Case {index + 1}</p>
-                <p
-                  className={`text-xs ${
-                    testCase.status === "Success" ? "text-green-600" : testCase.status === "Failed" ? "text-red-600" : "text-gray-500"
-                  }`}
-                >
-                  {testCase.status || "Not Executed"}
-                </p>
+          {/* Test Case List */}
+          {testCases.length === 0 || testCases[0]?.input.trim() === "" ? (
+            <p className="text-gray-500 text-sm italic flex-1 flex items-center justify-center">
+              No test cases available.
+            </p>
+          ) : (
+            <>
+              <div className="w-1/3 border rounded-lg p-2 overflow-y-auto">
+                <h3 className="text-sm font-medium mb-2">Test Case List</h3>
+                {testCases.length > 0 ? (
+                  <div className="space-y-2">
+                    {testCases.map((testCase, index) => (
+                      <div
+                        key={index}
+                        className={`p-2 rounded cursor-pointer ${
+                          selectedTestCase === index ? "bg-blue-100 border border-blue-300" : "bg-gray-50 hover:bg-gray-100"
+                        }`}
+                        onClick={() => setSelectedTestCase(index)}
+                      >
+                        <p className="text-xs font-medium">Test Case {index + 1}</p>
+                        <p
+                          className={`text-xs ${
+                            testCase.status === "Success"
+                              ? "text-green-600"
+                              : testCase.status === "Failed"
+                              ? "text-red-600"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          {testCase.status || "Not Executed"}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-sm">No test cases available</p>
+                )}
               </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-500 text-sm">No test cases available</p>
-        )}
-      </div>
-  
-      {/* Test Case Details */}
-      <div className="w-2/3 border rounded-lg p-2 flex flex-col">
-        <h3 className="text-sm font-medium mb-2">Test Case Details</h3>
-  
-        {testCases.length > 0 && (
-          <div className="space-y-2 flex-1">
-            <div className="bg-gray-50 p-2 rounded">
-              <p className="text-xs font-medium">Input:</p>
-              <p className="font-mono text-xs whitespace-pre-wrap">{testCases[selectedTestCase]?.input}</p>
-            </div>
-            <div className="bg-gray-50 p-2 rounded">
-              <p className="text-xs font-medium">Expected Output:</p>
-              <p className="font-mono text-xs whitespace-pre-wrap">{testCases[selectedTestCase]?.expectedOutput}</p>
-            </div>
-  
-            {testCases[selectedTestCase]?.output && (
-              <div className="bg-gray-50 p-2 rounded mt-2 flex-1 overflow-y-auto">
-                <p className="text-xs font-medium">Output:</p>
-                <p className="font-mono text-xs whitespace-pre-wrap">{testCases[selectedTestCase]?.output}</p>
-                <p
-                  className={`text-xs font-medium mt-1 ${
-                    testCases[selectedTestCase]?.status === "Success" ? "text-green-600" : "text-red-600"
-                  }`}
-                >
-                  {testCases[selectedTestCase]?.status}
-                </p>
+
+              {/* Test Case Details */}
+              <div className="w-2/3 border rounded-lg p-2 flex flex-col">
+                <h3 className="text-sm font-medium mb-2">Test Case Details</h3>
+
+                {testCases.length > 0 && (
+                  <div className="space-y-2 flex-1">
+                    <div className="bg-gray-50 p-2 rounded">
+                      <p className="text-xs font-medium">Input:</p>
+                      <p className="font-mono text-xs whitespace-pre-wrap">{testCases[selectedTestCase]?.input}</p>
+                    </div>
+                    <div className="bg-gray-50 p-2 rounded">
+                      <p className="text-xs font-medium">Expected Output:</p>
+                      <p className="font-mono text-xs whitespace-pre-wrap">{testCases[selectedTestCase]?.expectedOutput}</p>
+                    </div>
+
+                    {testCases[selectedTestCase]?.output && (
+                      <div className="bg-gray-50 p-2 rounded mt-2 flex-1 overflow-y-auto">
+                        <p className="text-xs font-medium">Output:</p>
+                        <p className="font-mono text-xs whitespace-pre-wrap">{testCases[selectedTestCase]?.output}</p>
+                        <p
+                          className={`text-xs font-medium mt-1 ${
+                            testCases[selectedTestCase]?.status === "Success" ? "text-green-600" : "text-red-600"
+                          }`}
+                        >
+                          {testCases[selectedTestCase]?.status}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
+            </>
+          )}
+        </div>
   </div>
   
   );

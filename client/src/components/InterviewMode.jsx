@@ -39,9 +39,9 @@ const InterviewMode = () => {
     setRoleContext(role);
     console.log(role);
 
-    setTimeout(() => {
-      socket.emit("join-room", { roomId, role });
-    }, 100);
+    
+    socket.emit("join-room", { roomId, role });
+    
 };
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
