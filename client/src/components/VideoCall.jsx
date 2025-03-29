@@ -20,9 +20,11 @@ const VideoCall = () => {
       if (!peer.peer || peer.peer.signalingState === "closed") {
         peer.createPeerConnection();
       }
-
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-      setMyStream(stream);
+      if(!myStream){
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+        setMyStream(stream);
+      }
+      
 
       const offer = await peer.getOffer();
       socket.emit("user:call", { to: id, offer });
@@ -34,8 +36,10 @@ const VideoCall = () => {
   const handleIncomingCall = useCallback(async ({ from, offer }) => {
     try {
       setRemoteSocketId(from);
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-      setMyStream(stream);
+      if(!myStream){
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+        setMyStream(stream);
+      }
       
       console.log("Incoming Call", from, offer);
       const answer = await peer.getAnswer(offer);
@@ -174,35 +178,54 @@ const VideoCall = () => {
   ]);
 
   return (
-    <div>
-      <h1>Room Page</h1>
-      {myStream && (
-        <>
-          <h1>My Stream</h1>
-          <ReactPlayer playing muted height="100px" width="200px" url={myStream} />
-        </>
-      )}
-      {remoteStream && (
-        <>
-          <h1>Remote Stream</h1>
-          <ReactPlayer playing muted height="100px" width="200px" url={remoteStream} />
-        </>
-      )}
-      <button
-        onClick={handleEndCall}
-        style={{
-          marginTop: "10px",
-          padding: "10px",
-          background: "red",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-        }}
-      >
-        End Call
-      </button>
-    </div>
+    // <div className="relative flex flex-col items-center justify-center min-h-screen p-4 bg-gray-900 text-white">
+      <div className="relative  max-w-4xl bg-gray-800 rounded-lg shadow-lg p-4">
+        
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+          {/* Local Video */}
+          <div className="w-full md:w-1/2 flex flex-col items-center">
+            {myStream ? (
+              <ReactPlayer
+                url={myStream}
+                playing
+                muted
+                width="100%"
+                height="auto"
+                className="rounded-lg shadow-md"
+              />
+            ) : (
+              <div className="w-full h-40 bg-gray-900 rounded-lg flex items-center justify-center text-gray-400">
+                Waiting for Camera Access...
+              </div>
+            )}
+          </div>
+          {/* Remote Video */}
+          <div className="w-full md:w-1/2 flex flex-col items-center">
+            {remoteStream ? (
+              <ReactPlayer
+                url={remoteStream}
+                playing
+                width="100%"
+                height="auto"
+                className="rounded-lg shadow-md"
+              />
+            ) : (
+              <div className="w-full h-40 bg-gray-900 rounded-lg flex items-center justify-center text-gray-400">
+                Waiting for Remote Video...
+              </div>
+            )}
+          </div>
+        </div>
+        <button
+          onClick={handleEndCall}
+          className="absolute  right-2 px-3 py-1 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition"
+        >
+          End Call
+        </button>
+      </div>
+    // </div>
   );
+
 };
 
 export default VideoCall;
