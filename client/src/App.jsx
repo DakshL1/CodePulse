@@ -15,7 +15,7 @@ const App = () => {
       <Routes>
         <Route path="/Interview-mode" element={<InterviewMode />} />
         <Route path="/" element={<Main />} />
-        <Route path="/game-mode" component={<GameMode/>} />
+        <Route path="/game-mode" element={<GameMode />} />
         <Route path="/interview/:roomId" element={<InterviewRoom />} />
       </Routes>
      

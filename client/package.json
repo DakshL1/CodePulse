@@ -17,10 +17,12 @@
     "@codemirror/lang-python": "^6.1.7",
     "@tailwindcss/vite": "^4.0.10",
     "@uiw/react-codemirror": "^4.23.10",
+    "axios": "^1.8.3",
     "install": "^0.13.0",
     "npm": "^11.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-player": "^2.16.0",
     "react-router-dom": "^7.2.0",
     "socket.io-client": "^4.8.1",
     "tailwindcss": "^4.0.10"

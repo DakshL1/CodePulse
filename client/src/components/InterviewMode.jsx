@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import socket from './sockets';
+import socket from '../api/sockets';
 import { useRole } from '../context/RoleContext';
 
 const InterviewMode = () => {
@@ -30,16 +30,18 @@ const InterviewMode = () => {
 
   const handleSubmit = (e) => {
      e.preventDefault();
+    console.log("button clicked");
     if (!roomId || !role) {
         alert("Please enter a Room ID and select a Role.");
         return;
     }
     
     setRoleContext(role);
+    console.log(role);
 
-    setTimeout(() => {
-      socket.emit("join-room", { roomId, role });
-    }, 100);
+    
+    socket.emit("join-room", { roomId, role });
+    
 };
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
