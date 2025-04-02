@@ -14,7 +14,7 @@ const Main = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
+    <div className="min-h-[calc(100vh-64px)] bg-gradient-to-b from-gray-900 to-gray-800">
       
       <div className="container mx-auto px-4 pt-24 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
