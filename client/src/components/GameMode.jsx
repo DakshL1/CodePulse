@@ -90,7 +90,7 @@ const GameMode = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
+    <div className="min-h-[calc(100vh-64px)] flex flex-col bg-gray-100">
       {/* Top Section: Timer & Room Controls */}
       <div className="flex justify-between items-center p-4 bg-white shadow-md">
         <div>

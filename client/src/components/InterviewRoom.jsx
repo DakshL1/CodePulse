@@ -97,7 +97,7 @@ const InterviewRoom = () => {
   );
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
+    <div className="min-h-[calc(100vh-64px)]  flex flex-col bg-gray-100">
       <div className="flex flex-1 p-4 gap-4">
         <div className="flex flex-col gap-4 w-1/3">
 

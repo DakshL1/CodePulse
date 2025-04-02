@@ -92,6 +92,33 @@ io.on("connection", (socket) => {
     io.to(to).emit("endCall");
   });
 
+  socket.on('update-code', ({ newCode, roomId }) => {
+        socket.broadcast.to(roomId).emit('send-code', newCode);
+    });
+
+    // Handle language selection updates
+    socket.on("update-language", ({ language, roomId }) => {
+      socket.broadcast.to(roomId).emit("send-language", language);
+    });
+
+    // Handle messaging in the interview room
+    socket.on("send-message", ({ message, roomId, senderUserName }) => {
+        const fullMessage = { text: message.text, sender: socket.id, senderUserName };
+        socket.broadcast.to(roomId).emit("receive-message", fullMessage);
+    });
+
+    // Handle interviewer sending a question with test cases
+    socket.on("send-question", ({ question, testCases, roomId }) => {
+        console.log(`Question sent in room ${roomId}:`, question);
+        socket.broadcast.to(roomId).emit("receive-question", { question, testCases });
+    });
+
+    socket.on("send-output",({testCases,roomId})=>{
+        console.log(`Updating output in ${roomId}`);
+        socket.broadcast.to(roomId).emit("update-output",testCases);
+    });
+
+
   
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
