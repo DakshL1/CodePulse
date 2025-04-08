@@ -1,12 +1,12 @@
 import express from "express";
 import { createServer } from "http";
-import { connect } from "http2";
 import { Server } from "socket.io";
 
 const app = express();
 const SOCKET_PORT = 3000;
 
 const rooms = {};
+let gameRoomId="";
 
 const server = createServer(app);
 const io = new Server(server, { cors: { origin: "*", credentials: true } });
@@ -52,6 +52,8 @@ io.on("connection", (socket) => {
     
     console.log(`${role} joined room ${roomId}`);
   });
+
+
 
   // webrtc implementations
   socket.on("user:call", ({ to, offer }) => {
@@ -110,7 +112,7 @@ io.on("connection", (socket) => {
     // Handle interviewer sending a question with test cases
     socket.on("send-question", ({ question, testCases, roomId }) => {
         console.log(`Question sent in room ${roomId}:`, question);
-        socket.broadcast.to(roomId).emit("receive-question", { question, testCases });
+        io.to(roomId).emit("receive-question", { question, testCases });
     });
 
     socket.on("send-output",({testCases,roomId})=>{
@@ -119,6 +121,58 @@ io.on("connection", (socket) => {
     });
 
 
+  // Game Mode: Join room
+  socket.on("join-game-room", ({ roomId }) => {
+    socket.join(roomId);
+    socket.data.gameRoomId = roomId;
+    console.log(`(GameMode) ${socket.id} joined room ${roomId}`);
+    
+  });
+
+  // Game Mode: Player updates their code
+  socket.on("update-player-code", ({ code, roomId }) => {
+    socket.to(roomId).emit("receive-opponent-code", { code });
+  });
+
+  // Game Mode: Run code and return output to sender
+  socket.on("run-code", async ({ code, language, roomId }) => {
+    // Replace with your actual Judge0 or code runner integration
+    console.log(`Running code in ${language} from room ${roomId}`);
+
+    const output = `Mock output for language: ${language}`; // Simulate result
+    socket.emit("receive-run-output", { output });
+  });
+
+  // Game Mode: Send input/output to opponent
+  socket.on("update-player-io", ({ input, output, roomId }) => {
+    socket.to(roomId).emit("opponent-io", { input, output });
+  });
+
+  // Game Mode: Send question to opponent
+  socket.on("send-question", ({ question, roomId }) => {
+    console.log(`(GameMode) Question sent in room ${roomId}: ${question}`);
+    socket.to(roomId).emit("receive-question", { question });
+  });
+
+  // Game Mode: Leave Room
+  socket.on("leave-game-room", ({ roomId }) => {
+    console.log(`(GameMode) ${socket.id} left room ${roomId}`);
+    socket.leave(roomId);
+    socket.to(roomId).emit("opponent-left");
+  });
+
+  socket.on("start-timer", ({ roomId, timeLeft }) => {
+    socket.to(roomId).emit("start-timer", { timeLeft });
+  });
+
+  socket.on("stop-timer", ({ roomId }) => {
+    socket.to(roomId).emit("stop-timer");
+  });
+  
+  socket.on("reset-timer", ({ roomId }) => {
+    socket.to(roomId).emit("reset-timer");
+  });
+  
   
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);

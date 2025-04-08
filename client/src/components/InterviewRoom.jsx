@@ -59,9 +59,17 @@ const InterviewRoom = () => {
     (e) => {
       e.preventDefault();
       if (newMessage.trim() && roomId) {
-        const message = { text: newMessage };
         const senderUserName = user?.name || "Unknown";
+        const message = {
+          text: newMessage,
+          senderUserName,
+          sender: socket.id, // 👈 Add this line
+        };
   
+        // Add the message to local state
+        setMessages((prevMessages) => [...prevMessages, message]);
+  
+        // Emit to socket
         socket.emit("send-message", { message, roomId, senderUserName });
   
         setNewMessage("");
@@ -69,6 +77,8 @@ const InterviewRoom = () => {
     },
     [newMessage, roomId, user]
   );
+  
+  
 
   const updateCode = useCallback(
     (newCode) => {
@@ -102,7 +112,7 @@ const InterviewRoom = () => {
         <div className="flex flex-col gap-4 w-1/3">
 
           <VideoCall 
-          roomId= {roomId}
+          layout="horizontal"
           />
 
           <div className="bg-white p-4 shadow-md rounded-lg flex-1">
