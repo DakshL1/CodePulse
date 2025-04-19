@@ -149,9 +149,9 @@ io.on("connection", (socket) => {
   });
 
   // Game Mode: Send question to opponent
-  socket.on("send-question", ({ question, roomId }) => {
+  socket.on("send-question-game", ({ question, roomId }) => {
     console.log(`(GameMode) Question sent in room ${roomId}: ${question}`);
-    socket.to(roomId).emit("receive-question", { question });
+    socket.to(roomId).emit("receive-question-game", { question });
   });
 
   // Game Mode: Leave Room
@@ -172,7 +172,27 @@ io.on("connection", (socket) => {
   socket.on("reset-timer", ({ roomId }) => {
     socket.to(roomId).emit("reset-timer");
   });
+
+  socket.on("clear-question", ({ roomId })=>{
+    socket.to(roomId).emit("clear-question");
+  });
   
+  // Handle AI proctoring alerts from the interviewee
+socket.on("alert", ({ message, type }) => {
+  const roomId = Array.from(socket.rooms)[1]; // Get the room (skip socket.id)
+  if (roomId) {
+    // Send alert to everyone in room except sender (i.e., the interviewer)
+    socket.to(roomId).emit("alert", {
+      from: socket.id,
+      message,
+      type,
+    });
+    // console.log(`Alert in room ${roomId}: ${message}`);
+  } else {
+    console.warn(` No room found for socket ${socket.id}`);
+  }
+});
+
   
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);

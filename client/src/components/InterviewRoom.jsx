@@ -113,6 +113,7 @@ const InterviewRoom = () => {
 
           <VideoCall 
           layout="horizontal"
+          roomId={roomId}
           />
 
           <div className="bg-white p-4 shadow-md rounded-lg flex-1">

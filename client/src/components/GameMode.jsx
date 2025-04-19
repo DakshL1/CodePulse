@@ -44,7 +44,7 @@ const GameMode = () => {
       setOpponentInput("");
       setOpponentOutput("");
     });
-    socket.on("receive-question", ({ question }) => setQuestion(question));
+    socket.on("receive-question-game", ({ question }) => setQuestion(question));
 
     socket.on("receive-message", (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
@@ -76,6 +76,10 @@ const GameMode = () => {
       clearInterval(timerRef.current);
       setTimerRunning(false);
       setTimerValue(0);
+    });
+
+    socket.on("clear-question", ()=>{
+      setQuestion("");
     });
     
 
@@ -212,7 +216,7 @@ const GameMode = () => {
   
   const sendQuestion = useCallback(() => {
     if(!isRoomJoined) return alert("pls join a room!!")
-    socket.emit("send-question", { question: questionInput, roomId });
+    socket.emit("send-question-game", { question: questionInput, roomId });
     setQuestion(questionInput);
     setQuestionInput("");
   }, [questionInput, roomId]);
