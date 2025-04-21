@@ -124,8 +124,9 @@ io.on("connection", (socket) => {
   // Game Mode: Join room
   socket.on("join-game-room", ({ roomId }) => {
     socket.join(roomId);
-    socket.data.gameRoomId = roomId;
-    console.log(`(GameMode) ${socket.id} joined room ${roomId}`);
+    // socket.data.gameRoomId = roomId;
+    // console.log(`(GameMode) ${socket.id} joined room ${roomId}`);
+    socket.broadcast.to(roomId).emit("user:joined",{id:socket.id});//for  starting webrtc connection
     
   });
 
@@ -135,17 +136,15 @@ io.on("connection", (socket) => {
   });
 
   // Game Mode: Run code and return output to sender
-  socket.on("run-code", async ({ code, language, roomId }) => {
+  socket.on("update-output", ({ output, roomId }) => {
     // Replace with your actual Judge0 or code runner integration
-    console.log(`Running code in ${language} from room ${roomId}`);
-
-    const output = `Mock output for language: ${language}`; // Simulate result
-    socket.emit("receive-run-output", { output });
+    
+    socket.to(roomId).emit("receive-run-output", { output });
   });
 
   // Game Mode: Send input/output to opponent
-  socket.on("update-player-io", ({ input, output, roomId }) => {
-    socket.to(roomId).emit("opponent-io", { input, output });
+  socket.on("update-player-input", ({ input, roomId }) => {
+    socket.to(roomId).emit("opponent-input", { input });
   });
 
   // Game Mode: Send question to opponent
@@ -153,6 +152,7 @@ io.on("connection", (socket) => {
     console.log(`(GameMode) Question sent in room ${roomId}: ${question}`);
     socket.to(roomId).emit("receive-question-game", { question });
   });
+  
 
   // Game Mode: Leave Room
   socket.on("leave-game-room", ({ roomId }) => {

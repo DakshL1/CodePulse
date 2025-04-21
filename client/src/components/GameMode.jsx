@@ -8,6 +8,7 @@ import { java } from "@codemirror/lang-java";
 import VideoCall from "./VideoCall";
 import createSubmission from "../api/judgeZeroGameModeApi";
 import { useAuth0 } from "@auth0/auth0-react";
+import Chat from "./chat";
 
 const GameMode = () => {
   const [roomId, setRoomID] = useState("");
@@ -21,8 +22,6 @@ const GameMode = () => {
   const [playerOutput, setPlayerOutput] = useState("");
   const [opponentInput, setOpponentInput] = useState("");
   const [opponentOutput, setOpponentOutput] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [opponentName, setOpponentName] = useState("");
   const [question, setQuestion] = useState("");
@@ -33,10 +32,10 @@ const GameMode = () => {
 
   useEffect(() => {
     socket.on("receive-opponent-code", ({ code }) => setOpponentCode(code));
-    socket.on("receive-run-output", ({ output }) => setPlayerOutput(output));
-    socket.on("opponent-io", ({ input, output }) => {
+    socket.on("receive-run-output", ({ output }) => setOpponentOutput(output));
+    socket.on("opponent-input", ({ input}) => {
       setOpponentInput(input);
-      setOpponentOutput(output);
+
     });
     socket.on("opponent-left", () => {
       setOpponentName("");
@@ -46,10 +45,7 @@ const GameMode = () => {
     });
     socket.on("receive-question-game", ({ question }) => setQuestion(question));
 
-    socket.on("receive-message", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
-
+   
     socket.on("start-timer", ({ timeLeft }) => {
       setTimerValue(timeLeft);
       setTimerRunning(true);
@@ -89,7 +85,6 @@ const GameMode = () => {
       socket.off("opponent-io");
       socket.off("opponent-left");
       socket.off("receive-question");
-      socket.off("receive-message");
       socket.off("start-timer");
       socket.off("stop-timer");
       socket.off("reset-timer");
@@ -148,9 +143,8 @@ const GameMode = () => {
   const handleInputChange = (e) => {
     const input = e.target.value;
     setPlayerInput(input);
-    socket.emit("update-player-io", {
+    socket.emit("update-player-input", {
       input,
-      output: playerOutput,
       roomId,
     });
   };
@@ -171,7 +165,7 @@ const GameMode = () => {
         setPlayerOutput(result.output);
 
         if (roomId !== "") {
-          socket.emit("update-output", { output: result.output, roomId });
+          socket.emit("update-output", {output: result.output, roomId });
         }
       }
     } catch (error) {
@@ -185,7 +179,7 @@ const GameMode = () => {
     if (timeLeft <= 0) return;
   
     setTimerRunning(true);
-    socket.emit("start-timer", { roomId, timeLeft }); // 🔥 Send to socket
+    socket.emit("start-timer", { roomId, timeLeft }); 
   
     timerRef.current = setInterval(() => {
       timeLeft -= 1;
@@ -226,29 +220,7 @@ const GameMode = () => {
     setQuestion("");
   }, [roomId]);
 
-  const sendMessage = useCallback(
-    (e) => {
-      e.preventDefault();
-      if (newMessage.trim() && roomId) {
-        const senderUserName = user?.name || "Unknown";
-        const message = {
-          text: newMessage,
-          senderUserName,
-          sender: socket.id, // 👈 Add this line
-        };
-  
-        // Add the message to local state
-        setMessages((prevMessages) => [...prevMessages, message]);
-  
-        // Emit to socket
-        socket.emit("send-message", { message, roomId, senderUserName });
-  
-        setNewMessage("");
-      }
-    },
-    [newMessage, roomId, user]
-  );
-  
+ 
   
   return (
     <div className="min-h-[calc(100vh-64px)] flex flex-col overflow-hidden bg-gray-100">
@@ -345,47 +317,7 @@ const GameMode = () => {
           </div>
 
           {/* Chat Box */}
-          {isChatOpen && (
-            <div className="fixed bottom-4 right-4 z-50 w-72 bg-white shadow-lg rounded-md p-4">
-              <h2 className="font-bold mb-2">Chat</h2>
-              <div className="h-40 overflow-y-auto border p-2 mb-2 space-y-2">
-                {messages.map((msg, index) => (
-                  <div
-                    key={index}
-                    className={`flex ${msg.sender === socket.id ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div
-                      className={`text-sm p-2 rounded-lg max-w-[70%] break-words ${
-                        msg.sender === socket.id
-                          ? 'bg-blue-100 text-right'
-                          : 'bg-gray-200 text-left'
-                      }`}
-                    >
-                      <span className="font-bold block text-black">
-                        {msg.senderUserName || "Unknown"}
-                      </span>
-                      {msg.text}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <form onSubmit={sendMessage} className="flex">
-                <input
-                  type="text"
-                  placeholder="Type a message..."
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  className="w-full p-2 border rounded"
-                />
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white p-2 ml-2 rounded"
-                >
-                  Send
-                </button>
-              </form>
-            </div>
-          )}
+          <Chat isChatOpen={isChatOpen} roomId={roomId} />
         </div>
       </div>
 

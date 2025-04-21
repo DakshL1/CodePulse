@@ -23,8 +23,8 @@ const VideoCall = ({ layout = "vertical", roomId }) => {
     if (role === "Interviewee" && myStream && !aiStartedRef.current && aiVideoRef.current && canvasRef.current) {
       aiVideoRef.current.srcObject = myStream;
       aiVideoRef.current.onloadeddata = () => {
-        console.log("[AI PROCTORING] Starting with HTMLVideoElement and Canvas...");
-        AiProctoring(aiVideoRef.current, roomId, canvasRef.current); // <-- Pass canvas
+        // console.log("[AI PROCTORING] Starting with HTMLVideoElement and Canvas...");
+        AiProctoring(aiVideoRef.current, roomId); // <-- Pass canvas
         aiStartedRef.current = true;
       };
       aiVideoRef.current.play();
@@ -258,10 +258,10 @@ const VideoCall = ({ layout = "vertical", roomId }) => {
         
       </div>
 
-      <div className=" hidden relative w-[640px] h-[480px] border border-red-500 mt-4">
+      <div className="hidden  relative w-[640px] h-[480px] border border-red-500 mt-4">
         <video
           ref={aiVideoRef}
-          className=" hidden absolute top-0 left-0 w-full h-full opacity-40 z-10"
+          className="hidden  absolute top-0 left-0 w-full h-full opacity-40 z-10"
           muted
           autoPlay
           playsInline
@@ -271,13 +271,15 @@ const VideoCall = ({ layout = "vertical", roomId }) => {
           id="ai-proctor-canvas"
           className="hidden absolute top-0 left-0 w-full h-full z-20"
         />
-        <button
+        
+      </div>
+      <br />
+      <button
           onClick={handleStopAiProctoring}
-          className="hidden absolute left-2 px-3 py-1 bg-yellow-600 text-white rounded-lg shadow-md hover:bg-yellow-700 transition"
+          className=" hidden absolute left-2 px-3 py-1 bg-yellow-600 text-white rounded-lg shadow-md hover:bg-yellow-700 transition"
         >
           Stop AI Proctoring
         </button>
-      </div>
     </>
   );
 };
