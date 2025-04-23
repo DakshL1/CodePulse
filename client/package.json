@@ -15,6 +15,7 @@
     "@codemirror/lang-java": "^6.0.1",
     "@codemirror/lang-javascript": "^6.2.3",
     "@codemirror/lang-python": "^6.1.7",
+    "@mediapipe/tasks-vision": "^0.10.22-rc.20250304",
     "@tailwindcss/vite": "^4.0.10",
     "@uiw/react-codemirror": "^4.23.10",
     "axios": "^1.8.3",

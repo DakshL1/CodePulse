@@ -124,8 +124,9 @@ io.on("connection", (socket) => {
   // Game Mode: Join room
   socket.on("join-game-room", ({ roomId }) => {
     socket.join(roomId);
-    socket.data.gameRoomId = roomId;
-    console.log(`(GameMode) ${socket.id} joined room ${roomId}`);
+    // socket.data.gameRoomId = roomId;
+    // console.log(`(GameMode) ${socket.id} joined room ${roomId}`);
+    socket.broadcast.to(roomId).emit("user:joined",{id:socket.id});//for  starting webrtc connection
     
   });
 
@@ -135,24 +136,23 @@ io.on("connection", (socket) => {
   });
 
   // Game Mode: Run code and return output to sender
-  socket.on("run-code", async ({ code, language, roomId }) => {
+  socket.on("update-output", ({ output, roomId }) => {
     // Replace with your actual Judge0 or code runner integration
-    console.log(`Running code in ${language} from room ${roomId}`);
-
-    const output = `Mock output for language: ${language}`; // Simulate result
-    socket.emit("receive-run-output", { output });
+    
+    socket.to(roomId).emit("receive-run-output", { output });
   });
 
   // Game Mode: Send input/output to opponent
-  socket.on("update-player-io", ({ input, output, roomId }) => {
-    socket.to(roomId).emit("opponent-io", { input, output });
+  socket.on("update-player-input", ({ input, roomId }) => {
+    socket.to(roomId).emit("opponent-input", { input });
   });
 
   // Game Mode: Send question to opponent
-  socket.on("send-question", ({ question, roomId }) => {
+  socket.on("send-question-game", ({ question, roomId }) => {
     console.log(`(GameMode) Question sent in room ${roomId}: ${question}`);
-    socket.to(roomId).emit("receive-question", { question });
+    socket.to(roomId).emit("receive-question-game", { question });
   });
+  
 
   // Game Mode: Leave Room
   socket.on("leave-game-room", ({ roomId }) => {
@@ -172,7 +172,27 @@ io.on("connection", (socket) => {
   socket.on("reset-timer", ({ roomId }) => {
     socket.to(roomId).emit("reset-timer");
   });
+
+  socket.on("clear-question", ({ roomId })=>{
+    socket.to(roomId).emit("clear-question");
+  });
   
+  // Handle AI proctoring alerts from the interviewee
+socket.on("alert", ({ message, type }) => {
+  const roomId = Array.from(socket.rooms)[1]; // Get the room (skip socket.id)
+  if (roomId) {
+    // Send alert to everyone in room except sender (i.e., the interviewer)
+    socket.to(roomId).emit("alert", {
+      from: socket.id,
+      message,
+      type,
+    });
+    // console.log(`Alert in room ${roomId}: ${message}`);
+  } else {
+    console.warn(` No room found for socket ${socket.id}`);
+  }
+});
+
   
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
