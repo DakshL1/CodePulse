@@ -7,7 +7,7 @@ let running = true;
 
 const BUFFER_SIZE = 6;
 const ANGLE_THRESHOLD_LEFT = 110;
-const ANGLE_THRESHOLD_RIGHT = 130;
+const ANGLE_THRESHOLD_RIGHT = 133;
 
 
 const CENTER_SHIFT_THRESHOLD_RIGHT = 420;
