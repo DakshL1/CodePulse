@@ -14,14 +14,14 @@ const Main = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-gradient-to-b from-gray-900 to-gray-800">
+    <div className="min-h-screen bg-linear-to-bl from-black to-zinc-900">
       
       <div className="container mx-auto px-4 pt-24 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Interview Mode Section */}
-          <div className="bg-gray-800 p-8 rounded-2xl shadow-xl border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
+          <div className="bg-zinc-800 p-8 rounded-2xl shadow-xl border border-gray-500 hover:border-gray-100 transition-all duration-300">
             <div className="space-y-6">
-              <h1 className="text-3xl font-bold text-white mb-4 bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text ">
+              <h1 className="text-3xl font-bold text-white mb-4 bg-clip-text ">
                 Interview Mode
               </h1>
               <p className="text-gray-300 leading-relaxed">
@@ -29,7 +29,7 @@ const Main = () => {
               </p>
               <button
                 onClick={handleInterviewModeClick}
-                className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:from-blue-700 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-blue-500/25"
+                className="bg-gradient-to-r from-purple-800 to-purple-900 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
               >
                 Interview Mode
               </button>
@@ -37,9 +37,9 @@ const Main = () => {
           </div>
 
           {/* Game Mode Section */}
-          <div className="bg-gray-800 p-8 rounded-2xl shadow-xl border border-green-500/20 hover:border-green-500/40 transition-all duration-300">
+          <div className="bg-zinc-800 p-8 rounded-2xl shadow-xl border border-gray-500 hover:border-gray-100 transition-all duration-300">
             <div className="space-y-6">
-              <h1 className="text-3xl font-bold text-white mb-4 bg-gradient-to-r from-green-500 to-green-400 bg-clip-text ">
+              <h1 className="text-3xl font-bold text-white mb-4  bg-clip-text ">
                 Game Mode
               </h1>
               <p className="text-gray-300 leading-relaxed">
@@ -47,7 +47,7 @@ const Main = () => {
               </p>
               <button
                 onClick={handleGameModeClick}
-                className="bg-gradient-to-r from-green-600 to-green-500 text-white px-6 py-3 rounded-lg font-medium hover:from-green-700 hover:to-green-600 transition-all duration-300 shadow-lg hover:shadow-green-500/25"
+                className="bg-gradient-to-r from-purple-900 to-purple-800 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
               >
                 Game Mode
               </button>
