@@ -3,6 +3,7 @@ import { Auth0Provider } from '@auth0/auth0-react';
 import './index.css'
 import App from './App.jsx'
 import { BrowserRouter as Router } from 'react-router-dom';
+import LandingPage from './components/LandingPage.jsx';
 
 createRoot(document.getElementById('root')).render(
   <Auth0Provider

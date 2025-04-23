@@ -8,14 +8,16 @@ import GameMode from './components/GameMode';
 import InterviewRoom from './components/InterviewRoom';
 import { RoleProvider } from './context/RoleContext';
 import PrivateRoute from './components/PrivateRoute';
+import LandingPage from './components/LandingPage';
 
 const App = () => {
   return (
     <RoleProvider>
       <NavBar />
-      <div className="pt-16"></div>
       <Routes>
-        <Route path="/" element={<Main />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/Home" element={<Main />} />
+        
         <Route path="/Interview-mode" element={
           <PrivateRoute>
             <InterviewMode />
