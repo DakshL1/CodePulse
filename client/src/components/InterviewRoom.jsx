@@ -8,10 +8,13 @@ import { python } from '@codemirror/lang-python';
 import { cpp } from '@codemirror/lang-cpp';
 import { java } from '@codemirror/lang-java'; 
 import { useAuth0 } from '@auth0/auth0-react';
+import { useIntervieweeRestrictions } from "../services/useIntervieweeRestrictions";
 import InterviewerQuestion from "./InterviewerQuestion";
 import IntervieweeQuestion from "./IntervieweeQuestion";
 import CodeExecutionArea from "./CodeExecutionArea"; // Import the new component
 import VideoCall from "./VideoCall";
+import Chat from "./chat";
+
 
 const InterviewRoom = () => {
   const { role } = useRole();
@@ -19,12 +22,29 @@ const InterviewRoom = () => {
   const navigate = useNavigate();
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
+  
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const { user } = useAuth0();
+  const [isFullscreen, setIsFullscreen] = useState(role === "Interviewee" ? false : true);
+
 
   const [testCases, setTestCases] = useState([{ input: "", expectedOutput: "", output: "", status: "Not Executed", testCasePassed: null }]);
+
+  useIntervieweeRestrictions(role, roomId);
+
+  useEffect(() => {
+    if (role !== "Interviewee") return;
+  
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+  
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+  
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, [role]);
+  
 
   useEffect(() => {
     if (socket.connected) {
@@ -40,43 +60,20 @@ const InterviewRoom = () => {
       navigate("/"); // Redirect if there's an error
     });
 
-    socket.on("receive-message", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
+  
 
     socket.on("send-language", (newLanguage) => setLanguage(newLanguage));
     socket.on("send-code", (newCode) => setCode(newCode));
 
     return () => {
       socket.off("room-error");
-      socket.off("receive-message");
+     
       socket.off("send-language");
       socket.off("send-code");
     };
   }, [roomId, role, navigate]);
 
-  const sendMessage = useCallback(
-    (e) => {
-      e.preventDefault();
-      if (newMessage.trim() && roomId) {
-        const senderUserName = user?.name || "Unknown";
-        const message = {
-          text: newMessage,
-          senderUserName,
-          sender: socket.id, // 👈 Add this line
-        };
-  
-        // Add the message to local state
-        setMessages((prevMessages) => [...prevMessages, message]);
-  
-        // Emit to socket
-        socket.emit("send-message", { message, roomId, senderUserName });
-  
-        setNewMessage("");
-      }
-    },
-    [newMessage, roomId, user]
-  );
+
   
   
 
@@ -107,12 +104,34 @@ const InterviewRoom = () => {
   );
 
   return (
-    <div className="min-h-[calc(100vh-64px)]  flex flex-col bg-gray-100">
+    <>
+    {role === "Interviewee" && !isFullscreen && (
+     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-md transition-all duration-300 flex items-center justify-center">
+        <div className="text-center text-white p-6 rounded-lg bg-black bg-opacity-50 shadow-lg">
+          <h1 className="text-2xl font-bold mb-4">Please enter fullscreen mode to continue</h1>
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
+            onClick={() => {
+              const elem = document.documentElement;
+              if (elem.requestFullscreen) elem.requestFullscreen();
+            }}
+          >
+            Enter Fullscreen
+          </button>
+        </div>
+      </div>
+    )}
+    
+
+    <div className={`min-h-[calc(100vh-64px)] flex flex-col bg-gray-100 ${
+      role === "Interviewee" && !isFullscreen ? "pointer-events-none blur-[1px] select-none" : ""
+    }`}>
       <div className="flex flex-1 p-4 gap-4">
         <div className="flex flex-col gap-4 w-1/3">
 
           <VideoCall 
           layout="horizontal"
+          roomId={roomId}
           />
 
           <div className="bg-white p-4 shadow-md rounded-lg flex-1">
@@ -184,36 +203,13 @@ const InterviewRoom = () => {
               Chat
             </button>
 
-            {/* Chat popup (appears above the button) */}
-            {isChatOpen && (
-              <div className="fixed bottom-16 right-4 w-64 bg-white shadow-lg rounded-md p-4">
-                <h2 className="font-bold">Chat</h2>
-                <div className="h-32 overflow-y-auto border p-2 mb-2">
-                  {messages.map((msg, index) => (
-                    <div key={index} className={`text-sm p-1 ${msg.sender === socket.id ? 'text-right' : 'text-left'}`}>
-                      <span className="font-bold text-black">{msg.senderUserName || "Unknown"}</span>
-                      <br />
-                      {msg.text}
-                    </div>
-                  ))}
-                </div>
-                <form onSubmit={sendMessage} className="flex">
-                  <input 
-                    type="text" 
-                    placeholder="Type a message..." 
-                    value={newMessage} 
-                    onChange={(e) => setNewMessage(e.target.value)} 
-                    className="w-full p-2 border rounded" 
-                  />
-                  <button type="submit" className="bg-blue-500 text-white p-2 ml-2 rounded">Send</button>
-                </form>
-              </div>
-            )}
+            <Chat isChatOpen={isChatOpen} roomId={roomId} />
 
           </div>
         </div>
       </div>
     </div>
+    </>
   );
 };
 

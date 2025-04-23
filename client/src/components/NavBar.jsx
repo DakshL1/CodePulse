@@ -27,12 +27,17 @@ const NavBar = () => {
             <li>
               <Link to="/" className="hover:text-gray-400">Home</Link>
             </li>
-            <li>
-              <Link to="/Interview-mode" className="hover:text-gray-400">Interview Mode</Link>
-            </li>
-            <li>
-              <Link to="/Game-mode" className="hover:text-gray-400">Game Mode</Link>
-            </li>
+            {isAuthenticated && (
+            <>
+              <li>
+                <Link to="/Interview-mode" className="hover:text-gray-400">Interview Mode</Link>
+              </li>
+              <li>
+                <Link to="/Game-mode" className="hover:text-gray-400">Game Mode</Link>
+              </li>
+            </>
+          )}
+
             <li>
               {isAuthenticated ? (
                 <button 
