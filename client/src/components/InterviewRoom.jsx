@@ -104,112 +104,107 @@ const InterviewRoom = () => {
   );
 
   return (
-    <>
-    {role === "Interviewee" && !isFullscreen && (
-     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-md transition-all duration-300 flex items-center justify-center">
-        <div className="text-center text-white p-6 rounded-lg bg-black bg-opacity-50 shadow-lg">
-          <h1 className="text-2xl font-bold mb-4">Please enter fullscreen mode to continue</h1>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
-            onClick={() => {
-              const elem = document.documentElement;
-              if (elem.requestFullscreen) elem.requestFullscreen();
-            }}
-          >
-            Enter Fullscreen
-          </button>
+<>
+  {role === "Interviewee" && !isFullscreen && (
+    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-md transition-all duration-300 flex items-center justify-center">
+      <div className="text-center text-white p-6 rounded-lg bg-black bg-opacity-50 shadow-lg">
+        <h1 className="text-2xl font-bold mb-4">Please enter fullscreen mode to continue</h1>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
+          onClick={() => {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) elem.requestFullscreen();
+          }}
+        >
+          Enter Fullscreen
+        </button>
+      </div>
+    </div>
+  )}
+
+  <div
+    className={`h-screen flex flex-col bg-black text-white ${
+      role === "Interviewee" && !isFullscreen ? "pointer-events-none blur-[1px] select-none" : ""
+    }`}
+  >
+    <div className="flex flex-1 p-1 gap-2 h-screen mt-16 overflow-hidden ">
+      {/* Left Section */}
+      <div className="flex flex-col w-1/3">
+        <div className="h-[30%] m-0 p-0">
+          <VideoCall layout="horizontal" roomId={roomId} className="w-full h-full" />
+        </div>
+
+        <div className="p-4 shadow-md rounded-lg flex-1 h-[70%] bg-[hsl(0,0%,8%)]">
+          {role === "Interviewer" ? (
+            <InterviewerQuestion roomId={roomId} testCases={testCases} setTestCases={setTestCases} />
+          ) : (
+            <IntervieweeQuestion testCases={testCases} setTestCases={setTestCases} />
+          )}
         </div>
       </div>
-    )}
-    
 
-    <div className={`min-h-[calc(100vh-64px)] flex flex-col bg-gray-100 ${
-      role === "Interviewee" && !isFullscreen ? "pointer-events-none blur-[1px] select-none" : ""
-    }`}>
-      <div className="flex flex-1 p-4 gap-4">
-        <div className="flex flex-col gap-4 w-1/3">
+      {/* Right Section */}
+      <div className="flex flex-col w-2/3 gap-2">
+        {/* Code Editor */}
+        <div className="bg-[hsl(0,0%,8%)] p-4 shadow-md rounded-lg flex-1 flex flex-col h-[60%]">
+          <div className="flex justify-between items-center">
+            <p className="font-semibold mb-2">Code Editor</p>
+            <p className="font-bold mb-2">Interview Room - {roomId}</p>
+          </div>
 
-          <VideoCall 
-          layout="horizontal"
-          roomId={roomId}
-          />
+          {/* Language Selector */}
+          <select
+            value={language}
+            onChange={(e) => updateLang(e.target.value)}
+            className="p-2 border border-zinc-600 rounded mb-2 bg-zinc-700 text-white"
+          >
+            <option value="">Select your language</option>
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="cpp">C++</option>
+            <option value="java">Java</option>
+          </select>
 
-          <div className="bg-white p-4 shadow-md rounded-lg flex-1">
-            {role === "Interviewer" ? (
-              <InterviewerQuestion 
-                roomId={roomId} 
-                testCases={testCases} 
-                setTestCases={setTestCases} 
-              />
-            ) : (
-              <IntervieweeQuestion 
-                testCases={testCases} 
-                setTestCases={setTestCases}
-              />
-            )}
+          {/* CodeMirror Wrapper */}
+          <div className="flex-1 border border-zinc-600 rounded-lg overflow-auto">
+            <CodeMirror
+              value={code}
+              extensions={setLanguageExtension}
+              onChange={updateCode}
+              basicSetup={{
+                lineNumbers: true,
+                lineWrapping: true,
+              }}
+              className="h-full min-h-[400px]"
+            />
           </div>
         </div>
 
-        <div className="flex flex-col w-2/3 gap-4">
-          <div className="bg-white p-4 shadow-md rounded-lg flex-1 flex flex-col h-full">
-            <div className="flex justify-between items-center">
-              <p className="font-semibold mb-2">Code Editor</p>
-              <p className="font-bold mb-2">Interview Room - {roomId}</p>
-            </div>
-            
-            {/* Language Selector */}
-            <select 
-              value={language} 
-              onChange={(e) => updateLang(e.target.value)} 
-              className="p-2 border rounded mb-2"
-            >
-              <option value="">Select your language</option>
-              <option value="javascript">JavaScript</option>
-              <option value="python">Python</option>
-              <option value="cpp">C++</option>
-              <option value="java">Java</option>
-            </select>
-
-            {/* CodeMirror Wrapper */}
-            <div className="flex-1 border rounded-lg overflow-auto max-h-[400px]">
-              <CodeMirror
-                value={code}
-                extensions={setLanguageExtension}
-                onChange={updateCode}
-                basicSetup={{
-                  lineNumbers: true,
-                  lineWrapping: true,
-                }}
-                className="h-full min-h-[400px]"
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            {/* Replace placeholder with actual CodeExecutionArea component */}
-            <CodeExecutionArea 
+        {/* Execution + Chat */}
+        <div className="flex h-[40%] gap-4">
+          <CodeExecutionArea 
               testCases={testCases} 
               code={code} 
               language={language} 
               roomId={roomId}
               setTestCases={setTestCases}
-            />
-            
-          {/* Chat button (always at the bottom-right) */}
-            <button 
-              className="fixed bottom-4 right-4 bg-blue-500 text-white p-2 rounded-md shadow-md h-10"
-              onClick={() => setIsChatOpen(!isChatOpen)}
-            >
-              Chat
-            </button>
+          />
 
-            <Chat isChatOpen={isChatOpen} roomId={roomId} />
+          {/* Chat Button */}
+          <button
+            className="fixed bottom-2 right-2 bg-zinc-700 text-white p-2 rounded-md shadow-md h-10 w-20"
+            onClick={() => setIsChatOpen(!isChatOpen)}
+          >
+            {isChatOpen ? "❌" : "Chat"}
+          </button>
 
-          </div>
+          <Chat isChatOpen={isChatOpen} roomId={roomId} />
         </div>
       </div>
     </div>
-    </>
+  </div>
+</>
+
   );
 };
 
