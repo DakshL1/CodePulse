@@ -40,12 +40,12 @@ const styles = `
     flex-wrap: nowrap;
     -webkit-font-smoothing: antialiased;
     font-family: "Plaster", sans-serif;
-    width: max-content; /* Ensure the content inside can scroll infinitely */
+    width: 100vw; 
   }
 
   .parallax span {
     display: block;
-    margin-right: 30px;
+    
   }
 `;
 
@@ -87,6 +87,10 @@ const ParallaxText = ({ children, baseVelocity = 100 }) => {
   return (
     <div className="parallax">
       <motion.div className="scroller" style={{ x }}>
+        <span>{children} </span>
+        <span>{children} </span>
+        <span>{children} </span>
+        <span>{children} </span>
         <span>{children} </span>
         <span>{children} </span>
         <span>{children} </span>

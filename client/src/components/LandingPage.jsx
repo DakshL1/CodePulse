@@ -92,7 +92,7 @@ const LandingPage = () => {
         </div>
 
         {/* Parallax Section */}
-        <div className="absolute col-span-2 col-start-1 row-span-1 row-start-2 m-0 p-0 z-30 bottom-2 w-full overflow-hidden">
+        <div className="absolute col-span-2 col-start-1 row-span-1 row-start-2 m-0 p-0 z-30 bottom-2 w-screen overflow-hidden">
           <ParallaxText baseVelocity={-5}>INTERVIEWS?</ParallaxText>
           <ParallaxText baseVelocity={5}>CodePulse</ParallaxText>
         </div>
