@@ -21,7 +21,7 @@ const NavBar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="text-xl font-bold">
-            <Link to="/">CodePulse</Link>
+            <Link to="/" >CodePulse</Link>
           </div>
 
           {/* Navigation Links */}
@@ -42,7 +42,7 @@ const NavBar = () => {
               {isAuthenticated ? (
                 <motion.button
                   onClick={handleLogout} 
-                  className="bg-[#9d0208] hover:bg-[#6a040f] px-4 py-2 rounded-xl">
+                  className="bg-red-700 hover:bg-red-600 px-4 py-2 rounded-xl">
                   Logout
                 </motion.button>
               ) : (

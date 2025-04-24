@@ -23,16 +23,17 @@ const IntervieweeQuestion = ({ testCases, setTestCases }) => {
   }, [setTestCases]);
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md mt-4 w-full">
-      <h2 className="font-bold mb-2">Question</h2>
-      {receivedQuestion ? (
-        <div className="bg-gray-50 p-3 rounded-lg">
-          <p className="mb-2 whitespace-pre-wrap">{receivedQuestion}</p>
-        </div>
-      ) : (
-        <p className="text-gray-500">Waiting for the interviewer to send a question...</p>
-      )}
-    </div>
+    <div className="bg-zinc-800 text-white p-4 rounded-lg shadow-md mt-4 w-full">
+    <h2 className="font-bold mb-2">Question</h2>
+    {receivedQuestion ? (
+      <div className="bg-zinc-700 p-3 rounded-lg">
+        <p className="mb-2 whitespace-pre-wrap">{receivedQuestion}</p>
+      </div>
+    ) : (
+      <p className="text-gray-400">Waiting for the interviewer to send a question...</p>
+    )}
+  </div>
+
   );
 };
 

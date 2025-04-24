@@ -209,11 +209,10 @@ const VideoCall = ({ layout = "vertical", roomId }) => {
 
   return (
     <>
-      <div className="relative max-w-4xl bg-gray-800 rounded-lg shadow-lg p-4">
         <div
-          className={`flex ${layout === "vertical" ? "flex-col gap-4" : "flex-row gap-4"} items-center justify-center`}
+          className={`relative w-full h-full bg-[hsl(0,0%,8%)] rounded-lg shadow-lg flex ${layout === "vertical" ? "flex-col gap-2" : "flex-row gap-2"} items-center justify-center `}
         >
-          <div className="w-full md:w-1/2 flex flex-col items-center relative">
+          <div className={`flex ${layout === "vertical" ? "h-[40%] w-[100%]" : "w-1/2"} flex-col items-center  `}>
             {myStream ? (
               <>
                 <ReactPlayer
@@ -221,41 +220,40 @@ const VideoCall = ({ layout = "vertical", roomId }) => {
                   playing
                   muted
                   width="100%"
-                  height="auto"
+                  height="100%"
                   className="rounded-lg shadow-md"
                 />
               </>
             ) : (
-              <div className="w-full h-35 bg-gray-900 rounded-lg flex items-center justify-center text-gray-400">
-                Waiting for Camera Access...
+              <div className={`${layout === "vertical" ? "w-[90%] h-35" : "w-full h-35"} animate-pulse bg-zinc-800 rounded-lg flex items-center justify-center`}>
+                
               </div>
             )}
           </div>
 
-          <div className="w-full md:w-1/2 flex flex-col items-center">
+          <div className={`flex ${layout === "vertical" ? "h-[40%] w-[100%]" : "w-1/2"} flex-col items-center `}>
             {remoteStream ? (
               <ReactPlayer
                 url={remoteStream}
                 playing
                 width="100%"
-                height="auto"
+                height="100%"
                 className="rounded-lg shadow-md"
               />
             ) : (
-              <div className="w-full h-35 bg-gray-900 rounded-lg flex items-center justify-center text-gray-400">
-                Waiting for Remote Video...
+              <div className={`${layout === "vertical" ? "w-[90%] h-35" : "w-full h-35"} animate-pulse bg-zinc-800 rounded-lg flex items-center justify-center`}>
+               
               </div>
             )}
           </div>
-        </div>
-
-        <button
+          
+          <button
           onClick={handleEndCall}
-          className="absolute right-2 px-3 py-1 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition"
+          className={`absolute ${layout === "vertical" ? "bottom-0 right-2" : "-bottom-7 right-2"}  px-3 py-1 bg-red-700 text-white rounded-lg shadow-md hover:bg-red-800 transition z-50`}
         >
           End Call
         </button>
-        
+
       </div>
 
       <div className="hidden  relative w-[640px] h-[480px] border border-red-500 mt-4">

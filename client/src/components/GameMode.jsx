@@ -223,195 +223,192 @@ const GameMode = () => {
  
   
   return (
-    <div className="min-h-[calc(100vh-64px)] flex flex-col overflow-hidden bg-gray-100">
-    <div className="flex flex-1 overflow-hidden p-4 gap-4">
+<div className="h-screen flex flex-col overflow-hidden bg-black text-white ">
+  <div className="flex h-screen overflow-hidden p-4 gap-2 mt-16">
 
-      {/* Player's Section - Left */}
-      <div className="w-1/2 flex flex-col gap-4 overflow-hidden">
-        <div className="bg-white p-4 shadow-md rounded-lg flex flex-col flex-1 overflow-hidden">
+    {/* Player's Section - Left */}
+    <div className="w-1/2 flex flex-col gap-2 overflow-hidden">
+      <div className="bg-[hsl(0,0%,8%)] p-4 shadow-md rounded-lg flex flex-col flex-1 overflow-hidden">
 
-          {/* Room Join + Language Select */}
-          <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              {!isRoomJoined ? (
-                <input
-                  type="text"
-                  placeholder="Room ID"
-                  value={roomId}
-                  onChange={(e) => setRoomID(e.target.value)}
-                  className="p-2 border rounded"
-                />
-              ) : (
-                <p className="font-semibold">
-                  Joined Room: <span className="font-normal">{roomId}</span>
-                </p>
-              )}
-              {!isRoomJoined ? (
-                <button
-                  onClick={joinRoom}
-                  className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-                >
-                  Join Room
-                </button>
-              ) : (
-                <button
-                  onClick={leaveRoom}
-                  className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
-                >
-                  Disconnect
-                </button>
-              )}
-            </div>
-            <select
-              value={language}
-              onChange={(e) => updateLang(e.target.value)}
-              className="p-2 border rounded"
-            >
-              <option value="">Select Language</option>
-              <option value="javascript">JavaScript</option>
-              <option value="python">Python</option>
-              <option value="cpp">C++</option>
-              <option value="java">Java</option>
-            </select>
-          </div>
-
-          {/* CodeMirror */}
-          <div className="flex-1 flex flex-col gap-2 overflow-hidden">
-            <p className="font-semibold">Your Code</p>
-            <div className="flex-1 border rounded-lg overflow-hidden">
-              <CodeMirror
-                value={playerCode}
-                extensions={setLanguageExtension}
-                onChange={updateCode}
-                basicSetup={{ lineNumbers: true, lineWrapping: true }}
-                className="h-full w-full"
+        {/* Room Join + Language Select */}
+        <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            {!isRoomJoined ? (
+              <input
+                type="text"
+                placeholder="Room ID"
+                value={roomId}
+                onChange={(e) => setRoomID(e.target.value)}
+                className="p-2 border border-zinc-600 rounded bg-zinc-700 text-white"
               />
-            </div>
-          </div>
-
-          {/* Input / Output / Buttons */}
-          <div className="flex gap-4 mt-4">
-            <div className="flex-1 bg-white p-4 shadow-md rounded-lg">
-              <p className="font-semibold">Input</p>
-              <textarea
-                className="w-full h-16 border p-2 rounded resize-none"
-                value={playerInput}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="flex-1 bg-white p-4 shadow-md rounded-lg">
-              <p className="font-semibold">Output</p>
-              <pre className="overflow-auto h-16 border p-2 rounded">{playerOutput}</pre>
-            </div>
-            <div className="flex flex-col justify-center items-end gap-2">
-              <button onClick={runCode} className="bg-blue-500 text-white p-2 rounded w-24">
-                Run Code
-              </button>
+            ) : (
+              <p className="font-semibold">
+                Joined Room: <span className="font-normal">{roomId}</span>
+              </p>
+            )}
+            {!isRoomJoined ? (
               <button
-                onClick={() => setIsChatOpen(!isChatOpen)}
-                className="bg-gray-300 p-2 rounded w-24"
+                onClick={joinRoom}
+                className="bg-green-700 text-white p-2 rounded hover:bg-green-800"
               >
-                {isChatOpen ? "Close Chat" : "Open Chat"}
+                Join Room
               </button>
-            </div>
+            ) : (
+              <button
+                onClick={leaveRoom}
+                className="bg-red-700 text-white p-2 rounded hover:bg-red-800"
+              >
+                Disconnect
+              </button>
+            )}
           </div>
+          <select
+            value={language}
+            onChange={(e) => updateLang(e.target.value)}
+            className="p-2 border border-zinc-600 rounded bg-zinc-700 text-white"
+          >
+            <option value="">Select Language</option>
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="cpp">C++</option>
+            <option value="java">Java</option>
+          </select>
+        </div>
 
-          {/* Chat Box */}
-          <Chat isChatOpen={isChatOpen} roomId={roomId} />
+        {/* CodeMirror */}
+        <div className="flex-1 flex flex-col gap-2 overflow-hidden">
+          <p className="font-semibold">Your Code</p>
+          <div className="flex-1 border border-zinc-600 rounded-lg overflow-auto">
+            <CodeMirror
+              value={playerCode}
+              extensions={setLanguageExtension}
+              onChange={updateCode}
+              basicSetup={{ lineNumbers: true, lineWrapping: true }}
+              className="h-full w-full"
+            />
+          </div>
+        </div>
+
+        {/* Input / Output / Buttons */}
+        <div className="flex gap-2 mt-4">
+          <div className="flex-1 bg-[hsl(0,0%,8%)] p-4 shadow-md rounded-lg">
+            <p className="font-semibold">Input</p>
+            <textarea
+              className="w-full h-16 border p-2 rounded resize-none bg-zinc-700 text-white"
+              value={playerInput}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="flex-1 bg-[hsl(0,0%,8%)] p-4 shadow-md rounded-lg">
+            <p className="font-semibold">Output</p>
+            <pre className="overflow-auto h-16 border p-2 rounded bg-zinc-700 text-white">{playerOutput}</pre>
+          </div>
+          <div className="flex flex-col justify-center items-end gap-2">
+            <button onClick={runCode} className="bg-green-700 text-white p-2 rounded w-24 hover:bg-green-800">
+              Run Code
+            </button>
+            <button
+              onClick={() => setIsChatOpen(!isChatOpen)}
+              className="bg-zinc-700 text-white p-2 rounded w-24 hover:bg-zinc-600"
+            >
+              {isChatOpen ? "Close Chat" : "Open Chat"}
+            </button>
+          </div>
+        </div>
+
+        {/* Chat Box */}
+        <Chat isChatOpen={isChatOpen} roomId={roomId} />
+      </div>
+    </div>
+
+    {/* Opponent + Video + Question Section */}
+    <div className="w-1/2 flex flex-col gap-2 overflow-hidden">
+      <div className="flex h-[60%] w-full gap-2 flex-1 overflow-hidden">
+        <div className="flex flex-col flex-1 gap-2 overflow-hidden">
+          <div className="bg-[hsl(0,0%,8%)] p-4 shadow-md rounded-lg flex items-center gap-2 flex-wrap">
+            {!timerRunning && (
+              <input
+                type="number"
+                placeholder="Timer (seconds)"
+                value={timerValue}
+                onChange={(e) => setTimerValue(e.target.value)}
+                className="p-2 border border-zinc-600 rounded-lg w-32 bg-zinc-700 text-white"
+              />
+            )}
+            <button onClick={startTimer} disabled={timerRunning} className="bg-green-700 text-white p-2 rounded hover:bg-green-800">
+              Start
+            </button>
+            <button onClick={stopTimer} className="bg-yellow-700 text-white p-2 rounded hover:bg-yellow-800">
+              Stop
+            </button>
+            <button onClick={resetTimer} className="bg-red-700 text-white p-2 rounded hover:bg-red-800">
+              Reset
+            </button>
+            {timerRunning && (
+              <span className="text-lg font-bold ml-auto">Time: {timerValue}s</span>
+            )}
+          </div>
+          <div className="bg-zinc-700 p-4 shadow-md rounded-lg flex-1 overflow-auto">
+            <p className="font-semibold mb-2">Question:</p>
+            <p className="mb-2 whitespace-pre-wrap">{question || "No question yet. Please add one."}</p>
+            
+            {!question ? (
+              <div className="flex gap-2">
+                <textarea
+                  value={questionInput}
+                  onChange={(e) => setQuestionInput(e.target.value)}
+                  placeholder="Enter a question to send"
+                  className="p-2 flex-1 border border-zinc-400 rounded bg-zinc-00 text-white"
+                />
+                <button onClick={sendQuestion} className="bg-zinc-800 text-white px-4 py-2 rounded hover:bg-zinc-600">
+                  Send
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={clearQuestion}
+                className="bg-red-700 text-white px-4 py-2 rounded mt-2 hover:bg-red-800"
+              >
+                Clear Question
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="w-[40%] h-[100%]">
+          <VideoCall layout="vertical" />
         </div>
       </div>
 
-  
-        {/* Opponent + Video + Question Section */}
-        <div className="w-1/2 flex flex-col gap-4 overflow-hidden">
-          <div className="flex h-[60%] w-full gap-4 flex-1 overflow-hidden">
-            <div className="flex flex-col flex-1 gap-4 overflow-hidden">
-              <div className="bg-white p-4 shadow-md rounded-lg flex items-center gap-4 flex-wrap">
-                {!timerRunning && (
-                  <input
-                    type="number"
-                    placeholder="Timer (seconds)"
-                    value={timerValue}
-                    onChange={(e) => setTimerValue(e.target.value)}
-                    className="p-2 border rounded-lg w-32"
-                  />
-                )}
-                <button onClick={startTimer} disabled={timerRunning} className="bg-green-500 text-white p-2 rounded">
-                  Start
-                </button>
-                <button onClick={stopTimer} className="bg-yellow-500 text-white p-2 rounded">
-                  Stop
-                </button>
-                <button onClick={resetTimer} className="bg-red-500 text-white p-2 rounded">
-                  Reset
-                </button>
-                {timerRunning && (
-                  <span className="text-lg font-bold ml-auto">Time: {timerValue}s</span>
-                )}
-              </div>
-              <div className="bg-yellow-100 p-4 shadow-md rounded-lg flex-1 overflow-auto">
-                <p className="font-semibold mb-2">Question:</p>
-                <p className="mb-2 whitespace-pre-wrap">{question || "No question yet. Please add one."}</p>
-                
-                {!question ? (
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={questionInput}
-                      onChange={(e) => setQuestionInput(e.target.value)}
-                      placeholder="Enter a question to send"
-                      className="p-2 flex-1 border rounded"
-                    />
-                    <button onClick={sendQuestion} className="bg-blue-600 text-white px-4 rounded">
-                      Send
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={clearQuestion}
-                    className="bg-red-500 text-white px-4 py-2 rounded mt-2"
-                  >
-                    Clear Question
-                  </button>
-                )}
-              </div>
-
-            </div>
-  
-            <div className="w-[40%] h-[100%] flex flex-col bg-gray-900 rounded-lg p-2 justify-between overflow-hidden">
-             <VideoCall layout="vertical" />
-            </div>
-
-          </div>
-  
-          <div className="flex h-[40%] w-full gap-4">
-            <div className="w-[70%] bg-gray-200 p-4 shadow-md rounded-lg overflow-auto">
-              <p className="font-semibold">Opponent's Code</p>
-              <CodeMirror
-                value={opponentCode}
-                readOnly
-                basicSetup={{ lineNumbers: true, lineWrapping: true }}
-                className="h-[85%] border rounded-lg w-full   overflow-auto"
-              />
-            </div>
-            <div className="w-[30%] bg-gray-200 p-4 shadow-md rounded-lg overflow-auto">
-              <p className="font-semibold">Opponent's Input</p>
-              <textarea
-                className="overflow-auto h-[35%] border p-2 rounded mb-2 w-full bg-gray-100 resize-none"
-                value={opponentInput}
-                readOnly
-              />
-              <p className="font-semibold">Opponent's Output</p>
-              <textarea
-                className="overflow-auto h-[35%] border p-2 rounded w-full bg-gray-100 resize-none"
-                value={opponentOutput}
-                readOnly
-              />
-            </div>
-          </div>
+      <div className="flex h-[40%] w-full gap-2">
+        <div className="w-[70%] bg-[hsl(0,0%,8%)] p-4 shadow-md rounded-lg overflow-auto">
+          <p className="font-semibold">Opponent's Code</p>
+          <CodeMirror
+            value={opponentCode}
+            readOnly
+            basicSetup={{ lineNumbers: true, lineWrapping: true }}
+            className="h-[85%] border border-zinc-600 rounded-lg w-full overflow-auto"
+          />
+        </div>
+        <div className="w-[30%] bg-[hsl(0,0%,8%)] p-4 shadow-md rounded-lg overflow-auto">
+          <p className="font-semibold">Opponent's Input</p>
+          <textarea
+            className="overflow-auto h-[35%] border p-2 rounded mb-2 w-full bg-zinc-700 text-white resize-none"
+            value={opponentInput}
+            readOnly
+          />
+          <p className="font-semibold">Opponent's Output</p>
+          <textarea
+            className="overflow-auto h-[35%] border p-2 rounded w-full bg-zinc-700 text-white resize-none"
+            value={opponentOutput}
+            readOnly
+          />
         </div>
       </div>
     </div>
+  </div>
+</div>
+
   );
 
 };
