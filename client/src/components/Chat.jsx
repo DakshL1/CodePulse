@@ -36,44 +36,47 @@ const Chat = ({ isChatOpen, roomId }) => {
   );
 
   return (
-    <>
-      {isChatOpen && (
-        <div className="fixed bottom-16 right-4 w-64 bg-white shadow-lg rounded-md p-4">
-          <h2 className="font-bold">Chat</h2>
-          <div className="h-32 overflow-y-auto border p-2 mb-2">
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`text-sm p-1 ${
-                  msg.sender === socket.id ? "text-right" : "text-left"
-                }`}
-              >
-                <span className="font-bold text-black">
-                  {msg.senderUserName || "Unknown"}
-                </span>
-                <br />
-                {msg.text}
-              </div>
-            ))}
+<>
+  {isChatOpen && (
+    <div className="fixed bottom-16 right-4 w-64 bg-zinc-800 shadow-lg rounded-md p-4 text-white">
+      <h2 className="font-bold mb-2">Chat</h2>
+      
+      <div className="h-32 overflow-y-auto border border-zinc-700 p-2 mb-2 rounded">
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`text-sm p-1 ${
+              msg.sender === socket.id ? "text-right" : "text-left"
+            }`}
+          >
+            <span className="font-bold text-gray-200">
+              {msg.senderUserName || "Unknown"}
+            </span>
+            <br />
+            <span className="text-gray-300">{msg.text}</span>
           </div>
-          <form onSubmit={sendMessage} className="flex">
-            <input
-              type="text"
-              placeholder="Type a message..."
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              className="w-full p-2 border rounded"
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white p-2 ml-2 rounded"
-            >
-              Send
-            </button>
-          </form>
-        </div>
-      )}
-    </>
+        ))}
+      </div>
+
+      <form onSubmit={sendMessage} className="flex gap-2">
+        <input
+          type="text"
+          placeholder="Type a message..."
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          className="w-full p-2 bg-zinc-700 border border-zinc-600 rounded text-white placeholder-gray-400"
+        />
+        <button
+          type="submit"
+          className="bg-[hsl(0,0%,14%)] hover:bg-[hsl(0,0%,18%)] text-white px-3 rounded"
+        >
+          Send
+        </button>
+      </form>
+    </div>
+  )}
+</>
+
   );
 };
 

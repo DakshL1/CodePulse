@@ -44,8 +44,8 @@ const InterviewMode = () => {
     
 };
   return (
-    <div className="min-h-[calc(100vh-64px)] flex justify-center items-center  bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md w-80">
+    <div className="min-h-screen flex justify-center items-center  bg-linear-to-bl from-black to-zinc-900">
+      <form onSubmit={handleSubmit} className="bg-linear-to-r from-gray-300 via-gray-400 to-zinc-500 p-6 rounded-lg shadow-md w-80">
         <h2 className="text-xl font-bold mb-4">Join Interview</h2>
         
         <label className="block mb-2 text-sm font-medium">Select Role:</label>
@@ -57,7 +57,7 @@ const InterviewMode = () => {
         <label className="block mb-2 text-sm font-medium">Enter Room ID:</label>
         <input type="text" value={roomId} onChange={(e) => setRoomId(e.target.value)} className="w-full p-2 border rounded mb-4" placeholder="Enter Room ID" />
 
-        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+        <button type="submit" className="w-full bg-zinc-700 text-white py-2 rounded hover:bg-pruple-600">
           Join
         </button>
       </form>
