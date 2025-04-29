@@ -127,7 +127,7 @@ const InterviewRoom = () => {
       role === "Interviewee" && !isFullscreen ? "pointer-events-none blur-[1px] select-none" : ""
     }`}
   >
-    <div className="flex flex-1 p-1 gap-2 h-screen mt-16 overflow-hidden ">
+    <div className="flex flex-1 p-1 gap-2 h-screen  overflow-hidden ">
       {/* Left Section */}
       <div className="flex flex-col w-1/3">
         <div className="h-[30%] m-0 p-0">
@@ -175,7 +175,7 @@ const InterviewRoom = () => {
                 lineNumbers: true,
                 lineWrapping: true,
               }}
-              className="h-full min-h-[400px]"
+              className="text-black h-full min-h-[400px]"
             />
           </div>
         </div>

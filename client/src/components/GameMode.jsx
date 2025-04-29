@@ -284,7 +284,7 @@ const GameMode = () => {
               extensions={setLanguageExtension}
               onChange={updateCode}
               basicSetup={{ lineNumbers: true, lineWrapping: true }}
-              className="h-full w-full"
+              className="h-full w-full text-black"
             />
           </div>
         </div>
@@ -387,7 +387,7 @@ const GameMode = () => {
             value={opponentCode}
             readOnly
             basicSetup={{ lineNumbers: true, lineWrapping: true }}
-            className="h-[85%] border border-zinc-600 rounded-lg w-full overflow-auto"
+            className="h-[85%] border border-zinc-600 rounded-lg w-full overflow-auto text-black"
           />
         </div>
         <div className="w-[30%] bg-[hsl(0,0%,8%)] p-4 shadow-md rounded-lg overflow-auto">

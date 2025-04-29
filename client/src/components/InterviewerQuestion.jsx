@@ -142,9 +142,10 @@ const InterviewerQuestion = ({ roomId, testCases, setTestCases }) => {
     </div>
   
     {/* Lower section: AI Proctoring Alerts */}
+    <div className="flex-[30%]">
     <h3 className="text-red-400 font-bold mb-2">AI Proctoring Alerts</h3>
     {alerts.length > 0 && (
-      <div className="flex-[30%] overflow-y-auto">
+      <div className=" overflow-y-auto">
         
         <div className="max-h-full overflow-y-auto space-y-2 pr-1">
           {alerts.map((alert, index) => (
@@ -159,6 +160,8 @@ const InterviewerQuestion = ({ roomId, testCases, setTestCases }) => {
         </div>
       </div>
     )}
+    </div>
+
   </div>
   
 
