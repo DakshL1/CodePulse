@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// import KEY from './judgeZeroKey';
-const KEY = 'df275444c3mshe175bad7459e6f1p16a68ejsn8ae31e5fe911';
+import KEY from './judgeZeroKey';
 
 const createBulkSubmission = async (id, code, testCases) => {
   console.log("Creating bulk submission:", id, code, testCases);
