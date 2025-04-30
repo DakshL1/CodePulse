@@ -1,6 +1,7 @@
 import axios from 'axios';
  
-import KEY from './judgeZeroKey'; 
+// import KEY from './judgeZeroKey'; 
+const KEY = 'df275444c3mshe175bad7459e6f1p16a68ejsn8ae31e5fe911';
 
 const createSubmission = async (id, code, stdinput) => {
   console.log(id, code, stdinput);
