@@ -18,6 +18,7 @@
     "@mediapipe/tasks-vision": "^0.10.22-rc.20250304",
     "@motionone/utils": "^10.18.0",
     "@tailwindcss/vite": "^4.0.10",
+    "@uiw/codemirror-theme-dracula": "^4.23.12",
     "@uiw/react-codemirror": "^4.23.10",
     "axios": "^1.8.3",
     "framer-motion": "^12.9.1",

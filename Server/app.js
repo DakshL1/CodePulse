@@ -1,8 +1,17 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import cors from 'cors';
+import judgeZeroIM from './routes/judgeZeroIM.js';
+import judgeZeroGM from './routes/judgeZeroGM.js';
 
 const app = express();
+app.use(cors());
+app.use(express.json());
+
+app.use('/api/judge0', judgeZeroIM);
+
+app.use('/api/judge0-GM', judgeZeroGM);
 const SOCKET_PORT = 3000;
 
 const rooms = {};

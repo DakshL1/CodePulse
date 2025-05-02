@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import createBulkSubmission from '../api/judgeZeroApi';
 import socket from '../api/sockets';
+import axios from 'axios';
+
 
 const CodeExecutionArea = ({ roomId, testCases, code, language, setTestCases }) => {
   const [isExecuting, setIsExecuting] = useState(false);
   const [selectedTestCase, setSelectedTestCase] = useState(0);
   const [id, setId] = useState(0);
+  const Backend_URl = import.meta.env.VITE_BACKEND_URL;
 
   
   useEffect(() => {
@@ -37,33 +39,40 @@ const CodeExecutionArea = ({ roomId, testCases, code, language, setTestCases }) 
       return;
     }
     setIsExecuting(true);
-
-    // Mark test cases as "Running..."
+  
+    // Mark test cases as "Running..." before making the API call
     setTestCases(prevTestCases => prevTestCases.map(tc => ({
       ...tc,
       status: "Running...",
       output: ""
     })));
-
+  
     try {
-      const response = await createBulkSubmission(id, code, testCases);
-
-      if (response && response.length > 0) {
-        const updatedTestCases = testCases.map((tc, index) => ({
-          ...tc,
-          output: response[index].output || "No Output",
-          status: response[index].testCasePassed ? "Success" : "Failed",
-          testCasePassed: response[index].testCasePassed
-        }));
-
-        // Update the local test case state
-        setTestCases(updatedTestCases);
-
-        // Emit the updated results to the room
-        socket.emit("send-output", { testCases: updatedTestCases, roomId });
-      }
-    } catch (error) {
-      console.error("Execution error:", error);
+      // API call using axios
+      const res = await axios.post(`${Backend_URl}/api/judge0/execute`, {
+        languageId: id,
+        code,
+        testCases,
+      });
+  
+      // Update test cases based on the response
+      const updatedTestCases = testCases.map((tc, i) => ({
+        ...tc,
+        output: res.data[i].output || "No Output",
+        status: res.data[i].testCasePassed ? "Success" : "Failed",
+        testCasePassed: res.data[i].testCasePassed,
+      }));
+  
+      // Update the local test case state
+      setTestCases(updatedTestCases);
+  
+      // Emit the updated results to the room
+      socket.emit("send-output", { testCases: updatedTestCases, roomId });
+  
+    } catch (err) {
+      console.error("Execution error:", err);
+  
+      // Handle API errors by marking test cases with an error status
       setTestCases(prevTestCases => prevTestCases.map(tc => ({
         ...tc,
         status: "Error",
@@ -73,6 +82,8 @@ const CodeExecutionArea = ({ roomId, testCases, code, language, setTestCases }) 
       setIsExecuting(false);
     }
   }, [code, id, testCases, roomId, setTestCases]);
+  
+
 
   return (
 <div className="p-4 shadow-md rounded-lg flex-1 flex flex-col text-white" style={{ backgroundColor: "hsl(0, 0%, 6%)" }}>
