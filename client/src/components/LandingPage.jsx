@@ -18,7 +18,6 @@ const LandingPage = () => {
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (!handRef.current) return;
-      
       // Calculate rotation based on cursor position
       // Get window width and calculate percentage
       const windowWidth = window.innerWidth;

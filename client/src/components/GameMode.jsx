@@ -6,9 +6,11 @@ import { python } from "@codemirror/lang-python";
 import { cpp } from "@codemirror/lang-cpp";
 import { java } from "@codemirror/lang-java";
 import VideoCall from "./VideoCall";
-import createSubmission from "../api/judgeZeroGameModeApi";
+import axios from 'axios';
 import { useAuth0 } from "@auth0/auth0-react";
 import Chat from "./chat";
+import { dracula } from '@uiw/codemirror-theme-dracula';
+
 
 const GameMode = () => {
   const [roomId, setRoomID] = useState("");
@@ -29,6 +31,7 @@ const GameMode = () => {
   const [id, setId] = useState(0);
   const timerRef = useRef(null);
   const { user } = useAuth0();
+  const Backend_URl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     socket.on("receive-opponent-code", ({ code }) => setOpponentCode(code));
@@ -149,23 +152,32 @@ const GameMode = () => {
     });
   };
 
+
   const runCode = useCallback(async () => {
     if (!language) {
       alert("Select a language!");
       return;
     }
-
+  
     if (playerCode.trim() === '') return;
-
+  
     try {
       const input = playerInput.trim();
-      const result = await createSubmission(id, playerCode, input !== "" ? input : null);
-
+  
+      // Make the API call directly here
+      const response = await axios.post(`${Backend_URl}/api/judge0-GM/execute`, {
+        id,
+        code: playerCode,
+        stdinput: input !== "" ? input : null
+      });
+  
+      const result = response.data;
+  
       if (result?.output) {
         setPlayerOutput(result.output);
-
+  
         if (roomId !== "") {
-          socket.emit("update-output", {output: result.output, roomId });
+          socket.emit("update-output", { output: result.output, roomId });
         }
       }
     } catch (error) {
@@ -173,6 +185,7 @@ const GameMode = () => {
       setPlayerOutput("Error executing code.");
     }
   }, [language, playerCode, playerInput, id, roomId]);
+  
 
   const startTimer = useCallback(() => {
     let timeLeft = parseInt(timerValue, 10) || 0;
@@ -285,6 +298,7 @@ const GameMode = () => {
               onChange={updateCode}
               basicSetup={{ lineNumbers: true, lineWrapping: true }}
               className="h-full w-full"
+              theme={dracula}
             />
           </div>
         </div>
@@ -388,6 +402,7 @@ const GameMode = () => {
             readOnly
             basicSetup={{ lineNumbers: true, lineWrapping: true }}
             className="h-[85%] border border-zinc-600 rounded-lg w-full overflow-auto"
+            theme={dracula}
           />
         </div>
         <div className="w-[30%] bg-[hsl(0,0%,8%)] p-4 shadow-md rounded-lg overflow-auto">

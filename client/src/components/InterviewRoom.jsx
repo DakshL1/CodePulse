@@ -7,7 +7,7 @@ import { javascript } from '@codemirror/lang-javascript';
 import { python } from '@codemirror/lang-python'; 
 import { cpp } from '@codemirror/lang-cpp';
 import { java } from '@codemirror/lang-java'; 
-import { useAuth0 } from '@auth0/auth0-react';
+import { dracula } from '@uiw/codemirror-theme-dracula';
 import { useIntervieweeRestrictions } from "../services/useIntervieweeRestrictions";
 import InterviewerQuestion from "./InterviewerQuestion";
 import IntervieweeQuestion from "./IntervieweeQuestion";
@@ -176,6 +176,7 @@ const InterviewRoom = () => {
                 lineWrapping: true,
               }}
               className="h-full min-h-[400px]"
+              theme={dracula}
             />
           </div>
         </div>
