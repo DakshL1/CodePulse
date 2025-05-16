@@ -13,7 +13,7 @@ import InterviewerQuestion from "./InterviewerQuestion";
 import IntervieweeQuestion from "./IntervieweeQuestion";
 import CodeExecutionArea from "./CodeExecutionArea"; // Import the new component
 import VideoCall from "./VideoCall";
-import Chat from "./chat";
+import Chat from "./Chat";
 
 
 const InterviewRoom = () => {

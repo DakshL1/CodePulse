@@ -8,7 +8,7 @@ import { java } from "@codemirror/lang-java";
 import VideoCall from "./VideoCall";
 import axios from 'axios';
 import { useAuth0 } from "@auth0/auth0-react";
-import Chat from "./chat";
+import Chat from "./Chat";
 import { dracula } from '@uiw/codemirror-theme-dracula';
 
 
